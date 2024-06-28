@@ -1,5 +1,29 @@
 let width=document.querySelector(".bar").getBoundingClientRect().width;
+let songs;
 
+function setHeight() {
+    const parent = document.querySelector(".left");
+    const div1 = document.querySelector(".home");
+    const div2 = document.querySelector(".library");
+    const div3 = document.querySelector(".left-footer");
+    const div4 = document.querySelector(".heading");
+    const div5 = document.querySelector(".songlist");
+
+    const parentHeight = parent.getBoundingClientRect().height;
+    const div1Height = div1.getBoundingClientRect().height;
+    const div3Height = div3.getBoundingClientRect().height;
+    const div4Height = div4.getBoundingClientRect().height;
+    const div2Height = parentHeight - div1Height - div3Height;
+    const div5Height = div2Height - 1.75*div4Height;
+
+    div2.style.height = `${div2Height}px`;
+    div5.style.height = `${div5Height}px`;
+}
+
+window.onload = setHeight();
+window.onresize = setHeight();
+
+let musicnote=document.querySelector(".songlist").getElementsByTagName("img");
 let currentsong = new Audio();
 async function getSongs() {
     let a = await fetch("http://127.0.0.1:5500/SoundWave/songs/");
@@ -17,11 +41,20 @@ async function getSongs() {
     return songs;
 }
 
-function playmusic(music, track) {
+function playmusic(track) {
     currentsong.src = "/SoundWave/songs/" + track;
     currentsong.play();
     play.src = "./svg-images-logos/pause-c.svg";
     document.querySelector(".songname").innerHTML = track;
+    let index=songs.indexOf(currentsong.src.split("/").slice(-1)[0].split("%20").join(" "));
+    for (let i = 0; i < musicnote.length; i++) {
+        if(i==index){
+            musicnote[i].style.visibility="visible";
+        }
+        else{
+            musicnote[i].style.visibility="hidden";
+        }
+    }
 }
 
 function convertSecondsToMinutes(seconds) {
@@ -31,7 +64,7 @@ function convertSecondsToMinutes(seconds) {
 }
 
 async function main() {
-    let songs = await getSongs();
+    songs = await getSongs();
     console.log(songs);
 
     let songul = document.querySelector(".songlist").getElementsByTagName("ul")[0];
@@ -41,9 +74,7 @@ async function main() {
 
     Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e => {
         e.addEventListener("click", element => {
-            let music = e.getElementsByTagName("img")[0];
-            music.style.visibility = "visible";
-            playmusic(music, e.getElementsByTagName("div")[0].innerHTML);
+            playmusic(e.getElementsByTagName("div")[0].innerHTML);
         })
     })
 
@@ -71,6 +102,47 @@ async function main() {
         document.querySelector(".progress").style.width = `${percentseek}%`;
         currentsong.currentTime = (percentseek * currentsong.duration) / 100;
     })
+
+    document.querySelector(".menu").addEventListener("click", e=>{
+        let leftmedia=document.querySelector(".left");
+        leftmedia.style.transform= "translate(400%)";
+        leftmedia.style.zIndex= "1";
+        leftmedia.style.transition= "all 0.5s ease-in-out";
+    })
+
+    document.querySelector("#close").addEventListener("click", e=>{
+        let leftmedia=document.querySelector(".left");
+        leftmedia.style.transform= "translate(0%)";
+        leftmedia.style.zIndex= "0";
+        leftmedia.style.transition= "all 0.5s ease-in-out";
+    })
+
+    document.querySelector("#skip-pre").addEventListener("click", ()=>{
+        let index=songs.indexOf(currentsong.src.split("/").slice(-1)[0].split("%20").join(" "));
+        if(index>0){
+            playmusic(songs[index-1]);
+        } 
+    })
+
+    document.querySelector("#skip-next").addEventListener("click", ()=>{
+        let index=songs.indexOf(currentsong.src.split("/").slice(-1)[0].split("%20").join(" "));
+        if(index<songs.length-1){
+            playmusic(songs[index+1]);
+        } 
+    })
+
+    document.querySelector("#volume").addEventListener("click", ()=>{
+        let volume=document.getElementById("volume");
+        if(volume.getAttribute("src")=="./svg-images-logos/volume.svg"){
+            currentsong.muted=true;
+            volume.setAttribute("src", "./svg-images-logos/mute.svg");
+        }
+        else{
+            currentsong.muted=false;
+            volume.setAttribute("src", "./svg-images-logos/volume.svg");
+        }
+    })
+
 }
 
 main();
