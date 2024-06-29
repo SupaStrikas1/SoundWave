@@ -2,6 +2,11 @@ let width = document.querySelector(".bar").getBoundingClientRect().width;
 let songs;
 let folders;
 let genre;
+let imageUrl;
+
+const accessKey = '6HNG06x9hLDMWLjiUfGkwgz9LlIu9n9zDNxf_R_JLcU';
+const keyword = 'music';
+const url = `https://api.unsplash.com/photos/random?query=${keyword}&client_id=${accessKey}`;
 
 function setHeight() {
     const parent = document.querySelector(".left");
@@ -87,14 +92,28 @@ async function main() {
     folders = await loadfolders();
     console.log(folders);
 
+    async function fetchRandomImage() {
+        const accessKey = '6HNG06x9hLDMWLjiUfGkwgz9LlIu9n9zDNxf_R_JLcU';
+        const keyword = 'music';
+        const url = `https://api.unsplash.com/photos/random?query=${keyword}&client_id=${accessKey}`;
+        console.log(url);
+        const response = await fetch(url);
+        const data = await response.json();
+        imageUrl = data.urls.regular;
+        console.log(imageUrl);
+        return imageUrl;
+    }
+
 
     let foldercard = document.querySelector(".cardcontainer");
     for (const folder of folders) {
+        let imageSrc = await fetchRandomImage();
+        console.log(imageSrc);
         foldercard.innerHTML = foldercard.innerHTML + `<div class="card">
                         <div class="play">
                             <button class="play-btn"><img src="./svg-images-logos/play.svg" alt="play"></button>
                         </div>
-                        <img src="https://picsum.photos//300?random=${Math.random()}" alt="">
+                        <img class="folderimg" src="${imageSrc}" alt="">
                         <h3>${folder}</h3>
                     </div>`;
     }
