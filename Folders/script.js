@@ -34,7 +34,7 @@ let musicnote = document.querySelector(".songlist").getElementsByTagName("img");
 let currentsong = new Audio();
 
 async function getSongs(genre) {
-    let a = await fetch(`http://127.0.0.1:5500/SoundWave/Folders/songs/${genre}`);
+    let a = await fetch(`http://127.0.0.1:5500/SoundWave/songs/${genre}`);
     let response = await a.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -50,7 +50,7 @@ async function getSongs(genre) {
 }
 
 function playmusic(genre, track) {
-    currentsong.src = `/SoundWave/Folders/songs/${genre}/${track}`;
+    currentsong.src = `/SoundWave/songs/${genre}/${track}`;
     currentsong.play();
     play.src = "./svg-images-logos/pause-c.svg";
     document.querySelector(".songname").innerHTML = track;
@@ -72,7 +72,7 @@ function convertSecondsToMinutes(seconds) {
 }
 
 async function loadfolders() {
-    let a = await fetch("http://127.0.0.1:5500/SoundWave/Folders/songs/");
+    let a = await fetch("http://127.0.0.1:5500/SoundWave/songs/");
     let response = await a.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -80,7 +80,7 @@ async function loadfolders() {
     let folders = [];
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
-        if (element.href.startsWith("http://127.0.0.1:5500/SoundWave/Folders/songs/")) {
+        if (element.href.startsWith("http://127.0.0.1:5500/SoundWave/songs/")) {
             folders.push(element.title);
         }
     }
