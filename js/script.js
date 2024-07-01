@@ -2,11 +2,6 @@ let width = document.querySelector(".bar").getBoundingClientRect().width;
 let songs;
 let folders;
 let genre;
-let imageUrl;
-
-const accessKey = '6HNG06x9hLDMWLjiUfGkwgz9LlIu9n9zDNxf_R_JLcU';
-const keyword = 'music';
-const url = `https://api.unsplash.com/photos/random?query=${keyword}&client_id=${accessKey}`;
 
 function setHeight() {
     const parent = document.querySelector(".left");
@@ -34,23 +29,28 @@ let musicnote = document.querySelector(".songlist").getElementsByTagName("img");
 let currentsong = new Audio();
 
 async function getSongs(genre) {
-    let a = await fetch(`http://127.0.0.1:5500/SoundWave/songs/${genre}`);
+    let a = await fetch(`https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/${genre}`, {
+        headers: {
+          'Authorization': `token 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`,
+          'Accept': 'application/vnd.github.v3+json'
+        }});
+    console.log(a);
     let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a");
+    let songdirectories=JSON.parse(response);
+    console.log(songdirectories);
     let songs = [];
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.title.endsWith(".mp3")) {
-            songs.push(element.title);
+    for (let index = 0; index < songdirectories.length; index++) {
+        const element = songdirectories[index];
+        if (element.name.endsWith(".mp3")) {
+            songs.push(element.name);
         }
     }
+    console.log(songs);
     return songs;
 }
 
 function playmusic(genre, track) {
-    currentsong.src = `/SoundWave/songs/${genre}/${track}`;
+    currentsong.src = `https://raw.githubusercontent.com/SupaStrikas1/SoundWave/main/songs/${genre}/${track}`;
     currentsong.play();
     play.src = "./svg-images-logos/pause-c.svg";
     document.querySelector(".songname").innerHTML = track;
@@ -72,48 +72,36 @@ function convertSecondsToMinutes(seconds) {
 }
 
 async function loadfolders() {
-    let a = await fetch("http://127.0.0.1:5500/SoundWave/songs/");
+    let a = await fetch("https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/", {
+        headers: {
+          'Authorization': `token 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`,
+          'Accept': 'application/vnd.github.v3+json'
+        }});
     let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let as = div.getElementsByTagName("a");
+    let directories=JSON.parse(response);
     let folders = [];
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.href.startsWith("http://127.0.0.1:5500/SoundWave/songs/")) {
-            folders.push(element.title);
+    for (let index = 0; index < directories.length; index++) {
+        const element = directories[index];
+        if (element.url.startsWith("https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/")) {
+            folders.push(element.name);
         }
     }
-
     return folders;
 }
 
+
 async function main() {
+
     folders = await loadfolders();
     console.log(folders);
 
-    async function fetchRandomImage() {
-        const accessKey = '6HNG06x9hLDMWLjiUfGkwgz9LlIu9n9zDNxf_R_JLcU';
-        const keyword = 'music';
-        const url = `https://api.unsplash.com/photos/random?query=${keyword}&client_id=${accessKey}`;
-        console.log(url);
-        const response = await fetch(url);
-        const data = await response.json();
-        imageUrl = data.urls.regular;
-        console.log(imageUrl);
-        return imageUrl;
-    }
-
-
     let foldercard = document.querySelector(".cardcontainer");
     for (const folder of folders) {
-        let imageSrc = await fetchRandomImage();
-        console.log(imageSrc);
         foldercard.innerHTML = foldercard.innerHTML + `<div class="card">
                         <div class="play">
                             <button class="play-btn"><img src="./svg-images-logos/play.svg" alt="play"></button>
                         </div>
-                        <img class="folderimg" src="${imageSrc}" alt="">
+                        <img class="folderimg" src="" alt="">
                         <h3>${folder}</h3>
                     </div>`;
     }
