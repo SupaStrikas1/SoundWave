@@ -29,11 +29,7 @@ let musicnote = document.querySelector(".songlist").getElementsByTagName("img");
 let currentsong = new Audio();
 
 async function getSongs(genre) {
-    let a = await fetch(`https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/${genre}`, {
-        headers: {
-          'Authorization': `Bearer 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`,
-          'Accept': 'application/vnd.github.v3+json'
-        }});
+    let a = await fetch(`https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/${genre}`)
     console.log(a);
     let response = await a.text();
     let songdirectories=JSON.parse(response);
@@ -72,11 +68,7 @@ function convertSecondsToMinutes(seconds) {
 }
 
 async function loadfolders() {
-    let a = await fetch("https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/", {
-        headers: {
-          'Authorization': `Bearer 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`,
-          'Accept': 'application/vnd.github.v3+json'
-        }});
+    let a = await fetch("https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/");
     let response = await a.text();
     let directories=JSON.parse(response);
     let folders = [];
