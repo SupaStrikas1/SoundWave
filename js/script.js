@@ -31,7 +31,7 @@ let currentsong = new Audio();
 async function getSongs(genre) {
     let a = await fetch(`https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/${genre}`, {
         headers: {
-          'Authorization': `token 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`,
+          'Authorization': `Bearer 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`,
           'Accept': 'application/vnd.github.v3+json'
         }});
     console.log(a);
@@ -74,7 +74,7 @@ function convertSecondsToMinutes(seconds) {
 async function loadfolders() {
     let a = await fetch("https://api.github.com/repos/SupaStrikas1/SoundWave/contents/songs/", {
         headers: {
-          'Authorization': `token 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`,
+          'Authorization': `Bearer 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`,
           'Accept': 'application/vnd.github.v3+json'
         }});
     let response = await a.text();
