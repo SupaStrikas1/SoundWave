@@ -6,7 +6,7 @@
 
 body{
     background-color: black;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .main{
@@ -228,7 +228,7 @@ body{
 .cardcontainer .card{
     padding: 0.329vw;
     position: relative;
-    width: max(15vw, 15vh);
+    width: 15vw;
     height: fit-content;
     border: 1px solid white;
     border-radius: 0.329vw;
@@ -377,5 +377,34 @@ body{
 
     .menu{
         display: block;
+    }
+
+    .cardcontainer .card{
+        width: 80vw;
+        margin-bottom: 25px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .playbar{
+        height: 140px;
+    }
+
+    .card .folderimg{
+        height:80vw;
+    }
+
+    .play{
+        top: 75.681vw;
+    }
+
+    .play-btn{
+        height: 8.95vw;
+        width: 8.95vw;
+    }
+
+    .playbar .buttons{
+        top: 50%;
+        gap: 5px;
     }
 }

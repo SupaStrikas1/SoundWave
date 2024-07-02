@@ -93,7 +93,7 @@ async function main() {
                         <div class="play">
                             <button class="play-btn"><img src="./svg-images-logos/play.svg" alt="play"></button>
                         </div>
-                        <img class="folderimg" src="" alt="">
+                        <img class="folderimg" src="https://picsum.photos/200/300?random=${Math.random()}" alt="">
                         <h3>${folder}</h3>
                     </div>`;
     }
